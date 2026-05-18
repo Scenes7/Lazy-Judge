@@ -3,7 +3,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Zap, Play, RotateCcw, Loader2, ChevronDown, BookOpen, Settings } from "lucide-react";
+import { Zap, Loader2, ChevronDown, House, Settings } from "lucide-react";
 import { useJudge, Lang, StatusKind } from "./hooks/useJudge";
 import { useProblem, ProblemData, difficultyLabel } from "./hooks/useProblem";
 import { useSprintJudge, fetchRandomProblems } from "./hooks/useSprintJudge";
@@ -14,15 +14,15 @@ const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
 });
 
 const SPRINT_OPTIONS = [1, 3, 5, 10] as const;
-const MAX_CODE_LEN   = 1000;
+const MAX_CODE_LEN = 1000;
 
 const EDITOR_FONTS: { label: string; css: string }[] = [
-  { label: "Roboto Mono",    css: "'Roboto Mono', monospace" },
-  { label: "Roboto",         css: "'Roboto', sans-serif" },
-  { label: "Calibri",        css: "'Calibri', sans-serif" },
-  { label: "Futura",         css: "'Futura', 'Century Gothic', sans-serif" },
-  { label: "Source Code Pro",css: "'Source Code Pro', monospace" },
-  { label: "Comic Sans",     css: "'Comic Sans MS', cursive" },
+  { label: "Roboto Mono", css: "'Roboto Mono', monospace" },
+  { label: "Roboto", css: "'Roboto', sans-serif" },
+  { label: "Calibri", css: "'Calibri', sans-serif" },
+  { label: "Futura", css: "'Futura', 'Century Gothic', sans-serif" },
+  { label: "Source Code Pro", css: "'Source Code Pro', monospace" },
+  { label: "Comic Sans", css: "'Comic Sans MS', cursive" },
 ];
 
 const LANG_META: Record<Lang, { label: string; monacoLang: string }> = {
@@ -220,8 +220,8 @@ function ResultRow({ slot, idx, open, onToggle }: {
           <div style={{ display: "flex", gap: 18, alignItems: "center", flexShrink: 0 }}>
             {([
               { val: (() => { const s = Math.floor((slot.submitMs ?? 0) / 1000); return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`; })(), label: "Time" },
-              { val: String(slot.extraChars ?? 0),                                  label: "Chars" },
-              { val: String(Math.max(0, slot.slotWpm ?? 0)),                         label: "WPM" },
+              { val: String(slot.extraChars ?? 0), label: "Chars" },
+              { val: String(Math.max(0, slot.slotWpm ?? 0)), label: "WPM" },
             ]).map(({ val, label }) => (
               <div key={label} style={{ textAlign: "center" }}>
                 <div style={{ fontSize: 14, fontWeight: 700, fontVariantNumeric: "tabular-nums", color: "var(--text-primary)" }}>{val}</div>
@@ -274,7 +274,7 @@ function ResultRow({ slot, idx, open, onToggle }: {
 }
 
 // ── Full results body (no header — header is always rendered by SprintPage) ──────
- function ResultsScreen({ slots, finalStr, wpm, totalChars, accepted, onPlayAgain }: {
+function ResultsScreen({ slots, finalStr, wpm, totalChars, accepted, onPlayAgain }: {
   slots: Slot[];
   finalStr: string;
   wpm: number;
@@ -294,17 +294,13 @@ function ResultRow({ slot, idx, open, onToggle }: {
     }}>
       <style>{MD_STYLES}</style>
 
-      <div style={{ fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 36 }}>
-        Session Complete
-      </div>
-
       {/* Stats row */}
       <div style={{ display: "flex", gap: 48, textAlign: "center", marginBottom: 40 }}>
         {[
-          { label: "Time",       val: finalStr },
+          { label: "Time", val: finalStr },
           { label: "Characters", val: String(totalChars) },
-          { label: "WPM",        val: String(Math.max(0, wpm)) },
-          { label: "Accepted",   val: `${accepted}/${slots.length}` },
+          { label: "WPM", val: String(Math.max(0, wpm)) },
+          { label: "Accepted", val: `${accepted}/${slots.length}` },
         ].map(({ label, val }) => (
           <div key={label}>
             <div style={{ fontSize: 42, fontWeight: 800, letterSpacing: "-0.04em", color: "var(--text-primary)", fontVariantNumeric: "tabular-nums" }}>{val}</div>
@@ -322,9 +318,12 @@ function ResultRow({ slot, idx, open, onToggle }: {
 
       <button
         onClick={onPlayAgain}
-        style={{ marginTop: 36, padding: "11px 36px", background: "var(--accent-blue)", border: "none", borderRadius: 8, color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer", letterSpacing: "0.01em" }}
+        title="Play Again"
+        style={{ marginTop: 36, width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", background: "var(--bg-tertiary)", border: "none", borderRadius: 8, cursor: "pointer", color: "var(--text-muted)", transition: "background 0.15s" }}
+        onMouseEnter={e => (e.currentTarget.style.background = "var(--border-subtle)")}
+        onMouseLeave={e => (e.currentTarget.style.background = "var(--bg-tertiary)")}
       >
-        Play Again
+        <House size={18} />
       </button>
     </div>
   );
@@ -341,9 +340,9 @@ export default function SprintPage() {
   const [timer, setTimer] = useState<{ start: number; end: number | null }>({ start: 0, end: null });
   // ── Editor settings ──
   const [editorFontSize, setEditorFontSize] = useState(13);
-  const [editorFont,     setEditorFont]     = useState(EDITOR_FONTS[0].css);
-  const [showSettings,   setShowSettings]   = useState(false);
-  const [showTimer,      setShowTimer]      = useState(true);
+  const [editorFont, setEditorFont] = useState(EDITOR_FONTS[0].css);
+  const [showSettings, setShowSettings] = useState(false);
+  const [showTimer, setShowTimer] = useState(true);
   /** Stores per-language editor content for the intro (a_plus_b) problem. */
   const introCodeByLang = useRef<Partial<Record<Lang, string>>>({});
   const tickRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -418,11 +417,11 @@ export default function SprintPage() {
     const now = Date.now();
 
     // Per-problem stats
-    const submitMs   = now - problemStartTime.current;
+    const submitMs = now - problemStartTime.current;
     const starterLen = nonWs(slot.problem.starter_code?.[slot.lang] ?? "");
     const extraChars = Math.max(0, nonWs(submittedCode) - starterLen);
-    const minutes    = submitMs / 60000;
-    const slotWpm    = minutes > 0 ? Math.round((extraChars / 5) / minutes) : 0;
+    const minutes = submitMs / 60000;
+    const slotWpm = minutes > 0 ? Math.round((extraChars / 5) / minutes) : 0;
 
     setSlots(prev => {
       const next = [...prev];
@@ -460,12 +459,12 @@ export default function SprintPage() {
       {
         lang: slot.lang,
         code: submittedCode,
-        problem_id:    slot.problem.id,
+        problem_id: slot.problem.id,
         problem_title: slot.problem.meta?.title ?? slot.problem.id,
-        sprint_id:     sprintId.current,
-        sprint_size:   sprintSize,
-        slot_index:    cur,
-        problem_ms:    submitMs,
+        sprint_id: sprintId.current,
+        sprint_size: sprintSize,
+        slot_index: cur,
+        problem_ms: submitMs,
       },
       (slotIdx, verdict) => {
         setSlots(prev => {
@@ -514,10 +513,10 @@ export default function SprintPage() {
   // ── WPM (used on results screen) ──────────────────────────────────────────
   const totalMs = (timer.end ?? Date.now()) - timer.start;
   const totalMinutes = totalMs / 60000;
-  const totalTypedChars   = slots.reduce((s, sl) => s + nonWs(sl.submittedCode), 0);
+  const totalTypedChars = slots.reduce((s, sl) => s + nonWs(sl.submittedCode), 0);
   const totalStarterChars = slots.reduce((s, sl) => s + nonWs(sl.problem.starter_code?.[sl.lang] ?? ""), 0);
-  const totalChars        = Math.max(0, totalTypedChars - totalStarterChars);
-  const wpm = totalMinutes > 0 ? Math.round(((totalTypedChars - totalStarterChars) / sprintSize) / totalMinutes) : 0;
+  const totalChars = Math.max(0, totalTypedChars - totalStarterChars);
+  const wpm = totalMinutes > 0 ? Math.round((totalChars / 5) / totalMinutes) : 0;
 
   const currentProblem = phase === "intro" ? introProblem : phase === "sprint" ? slots[cur]?.problem ?? null : null;
   const isSubmitting = introStatus.kind === "queued" || introStatus.kind === "running";
@@ -547,25 +546,26 @@ export default function SprintPage() {
       {/* ── Top bar (always rendered) ── */}
       <header style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px", height: 58, background: "var(--bg-secondary)", flexShrink: 0, gap: 14 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          {/* Logo — click to go back to intro */}
-          <button
-            onClick={handlePlayAgain}
-            style={{ display: "flex", alignItems: "center", gap: 12, background: "transparent", border: "none", cursor: "pointer", padding: 0, color: "inherit" }}
+          {/* Logo — regular link so right-click → open in new tab works */}
+          <a
+            href="/"
+            onClick={e => { e.preventDefault(); handlePlayAgain(); }}
+            style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none", color: "inherit" }}
           >
-            <div style={{ width: 34, height: 34, borderRadius: 7, background: "linear-gradient(135deg,#388bfd,#bc8cff)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            {/* <div style={{ width: 34, height: 34, borderRadius: 7, background: "linear-gradient(135deg,#388bfd,#bc8cff)", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <Zap size={17} color="#fff" fill="#fff" />
-            </div>
-            <span style={{ fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em" }}>FastJudge</span>
-          </button>
-          {/* Settings gear */}
+            </div> */}
+            <span style={{ fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em" }}>lazyjudge</span>
+          </a>
+          {/* Settings gear — filled, same muted gray as the title */}
           <button
             onClick={() => setShowSettings(true)}
             title="Settings"
-            style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 34, height: 34, borderRadius: 7, border: "none", background: "transparent", color: "var(--text-secondary)", cursor: "pointer", transition: "color 0.15s, background 0.15s", marginLeft: 2 }}
-            onMouseEnter={e => { e.currentTarget.style.background = "var(--bg-tertiary)"; e.currentTarget.style.color = "var(--text-primary)"; }}
-            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-secondary)"; }}
+            style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 34, height: 34, borderRadius: 7, border: "none", background: "transparent", color: "var(--text-muted)", cursor: "pointer", transition: "background 0.15s", marginLeft: 2 }}
+            onMouseEnter={e => { e.currentTarget.style.background = "var(--bg-tertiary)"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
           >
-            <Settings size={18} />
+            <Settings size={18} color="var(--text-muted)" />
           </button>
           {phase === "sprint" && (
             <span style={{ fontSize: 13, color: "#388bfd", background: "rgba(56,139,253,0.12)", padding: "3px 11px", borderRadius: 12, fontWeight: 600 }}>
@@ -577,23 +577,20 @@ export default function SprintPage() {
         <div style={{ display: "flex", alignItems: "center", gap: 19 }}>
           {phase === "intro" && (
             <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                <span style={{ fontSize: 13, color: "var(--text-muted)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" }}>Problems</span>
-                <div style={{ display: "flex", gap: 4 }}>
-                  {SPRINT_OPTIONS.map(n => (
-                    <button
-                      key={n}
-                      onClick={() => setSprintSize(n)}
-                      style={{
-                        width: 38, height: 34, borderRadius: 7, border: "none",
-                        background: sprintSize === n ? "var(--accent-blue)" : "var(--bg-tertiary)",
-                        color: sprintSize === n ? "#fff" : "var(--text-secondary)",
-                        fontSize: 14, fontWeight: 700, cursor: "pointer",
-                        transition: "background 0.15s, color 0.15s",
-                      }}
-                    >{n}</button>
-                  ))}
-                </div>
+              <div style={{ display: "flex", borderRadius: 7, overflow: "hidden", background: "var(--bg-primary)" }}>
+                {SPRINT_OPTIONS.map(n => (
+                  <button
+                    key={n}
+                    onClick={() => setSprintSize(n)}
+                    style={{
+                      width: 38, height: 34, border: "none",
+                      background: "transparent",
+                      color: sprintSize === n ? "#bf6211" : "var(--text-secondary)",
+                      fontSize: 14, fontWeight: 700, cursor: "pointer",
+                      transition: "color 0.15s",
+                    }}
+                  >{n}</button>
+                ))}
               </div>
               <div style={{ width: 1, height: 22, background: "var(--border-subtle)" }} />
               <div style={{
@@ -601,8 +598,8 @@ export default function SprintPage() {
                 fontVariantNumeric: "tabular-nums",
                 visibility: showTimer ? "visible" : "hidden",
                 color: introStatus.kind === "success" ? "var(--accent-green)"
-                     : (introStatus.kind === "error" || introStatus.kind === "wrong_answer") ? "var(--accent-red)"
-                     : "var(--text-primary)",
+                  : (introStatus.kind === "error" || introStatus.kind === "wrong_answer") ? "var(--accent-red)"
+                    : "var(--text-secondary)",
               }}>
                 {isSubmitting
                   ? <Loader2 size={14} className="animate-spin" style={{ display: "inline" }} />
@@ -614,7 +611,7 @@ export default function SprintPage() {
           {phase === "sprint" && (
             <div style={{
               fontSize: 19, fontWeight: 700,
-              color: "var(--text-primary)", fontVariantNumeric: "tabular-nums",
+              color: "var(--text-secondary)", fontVariantNumeric: "tabular-nums",
               visibility: showTimer ? "visible" : "hidden",
             }}>
               {elapsedStr}
@@ -874,14 +871,10 @@ function SplitLayout({
       {/* Problem panel */}
       <aside style={{ width: `${splitPct}%`, display: "flex", flexDirection: "column", background: "var(--bg-secondary)", overflow: "hidden", flexShrink: 0 }}>
         <div style={{ padding: "12px 16px", borderBottom: "1px solid var(--border-subtle)", flexShrink: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-            <BookOpen size={13} style={{ color: "var(--text-secondary)" }} />
-            <span style={{ fontSize: 11, color: "var(--text-secondary)", textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 600 }}>Problem</span>
-          </div>
           {introLoading && phase === "intro" ? (
-            <div className="shimmer" style={{ height: 20, width: 160, borderRadius: 4, marginBottom: 8 }} />
+            <div className="shimmer" style={{ height: 20, width: 160, borderRadius: 4 }} />
           ) : (
-            <h1 style={{ fontSize: 16, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 6 }}>
+            <h1 style={{ fontSize: 16, fontWeight: 700, letterSpacing: "-0.02em", margin: 0 }}>
               {currentProblem?.meta.title ?? "\u2014"}
             </h1>
           )}
@@ -925,7 +918,7 @@ function SplitLayout({
                 <select
                   value={lang}
                   onChange={e => handleLangChange(e.target.value as Lang)}
-                  style={{ appearance: "none", background: "var(--bg-tertiary)", border: "1px solid var(--border-subtle)", borderRadius: 6, color: "var(--text-primary)", fontSize: 12, fontWeight: 500, padding: "5px 28px 5px 10px", cursor: "pointer", outline: "none" }}
+                  style={{ appearance: "none", background: "var(--bg-tertiary)", border: "1px solid var(--border-subtle)", borderRadius: 6, color: "var(--text-secondary)", fontSize: 12, fontWeight: 500, padding: "5px 28px 5px 10px", cursor: "pointer", outline: "none" }}
                 >
                   {(Object.keys(LANG_META) as Lang[]).map(l => (
                     <option key={l} value={l}>{LANG_META[l].label}</option>
@@ -962,11 +955,6 @@ function SplitLayout({
               })()}
             </div>
             <div style={{ display: "flex", gap: 8 }}>
-              {phase === "intro" && (
-                <button onClick={introReset} style={{ display: "flex", alignItems: "center", gap: 5, padding: "5px 12px", background: "transparent", border: "1px solid var(--border-subtle)", borderRadius: 6, color: "var(--text-secondary)", fontSize: 12, cursor: "pointer" }}>
-                  <RotateCcw size={12} /> Reset
-                </button>
-              )}
               <button
                 onClick={() => {
                   if ([...code].length > MAX_CODE_LEN) { setLimitExceeded(true); return; }
@@ -974,9 +962,9 @@ function SplitLayout({
                   else handleSprintSubmit();
                 }}
                 disabled={phase === "intro" ? (isSubmitting || introLoading) : false}
-                style={{ display: "flex", alignItems: "center", gap: 6, padding: "5px 18px", background: "var(--accent-green)", border: "none", borderRadius: 6, color: "#fff", fontSize: 12, fontWeight: 600, cursor: "pointer", opacity: phase === "intro" && (isSubmitting || introLoading) ? 0.5 : 1 }}
+                style={{ display: "flex", alignItems: "center", gap: 6, padding: "5px 18px", background: "var(--bg-primary)", border: "none", borderRadius: 6, color: isSubmitting ? "var(--text-muted)" : "#bf6211", fontSize: 12, fontWeight: 700, cursor: "pointer", opacity: phase === "intro" && (isSubmitting || introLoading) ? 0.5 : 1, transition: "opacity 0.15s" }}
               >
-                {isSubmitting ? <Loader2 size={12} className="animate-spin" /> : <Play size={12} fill="#fff" />}
+                {isSubmitting && <Loader2 size={12} className="animate-spin" />}
                 {phase === "intro" ? (isSubmitting ? "Judging\u2026" : "Submit") : "Submit & Next \u2192"}
               </button>
             </div>

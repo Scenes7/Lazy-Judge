@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "FastJudge — Online Code Judge",
+  title: "lazyjudge",
   description:
-    "High-performance online judge. Submit your code, get instant results.",
+    "minimalist coding speed test.",
   openGraph: {
-    title: "FastJudge",
-    description: "Submit code. Get results instantly.",
+    title: "lazyjudge",
+    description: "minimalist coding speed test.",
     type: "website",
   },
 };
