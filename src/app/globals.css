@@ -48,6 +48,13 @@
 .monaco-editor .margin {
   background-color: var(--bg-secondary) !important;
 }
+/* Center line numbers in the gutter and add 1px left breathing room */
+.monaco-editor .line-numbers {
+  text-align: center !important;
+  padding-left: 1px !important;
+  padding-right: 0 !important;
+}
+/* Note: Set lineNumbersMinChars: 3 in editor options={{ ... }} */
 
 /* Custom scrollbar */
 ::-webkit-scrollbar       { width: 6px; height: 6px; }

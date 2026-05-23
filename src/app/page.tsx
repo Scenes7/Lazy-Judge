@@ -3,7 +3,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Zap, Loader2, ChevronDown, House, Settings } from "lucide-react";
+import { Zap, Loader2, ChevronDown, House, Settings, CircleHelp } from "lucide-react";
 import { useJudge, Lang, StatusKind } from "./hooks/useJudge";
 import { useProblem, ProblemData, difficultyLabel } from "./hooks/useProblem";
 import { useSprintJudge, fetchRandomProblems } from "./hooks/useSprintJudge";
@@ -342,6 +342,7 @@ export default function SprintPage() {
   const [editorFontSize, setEditorFontSize] = useState(13);
   const [editorFont, setEditorFont] = useState(EDITOR_FONTS[0].css);
   const [showSettings, setShowSettings] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
   const [showTimer, setShowTimer] = useState(true);
   /** Stores per-language editor content for the intro (a_plus_b) problem. */
   const introCodeByLang = useRef<Partial<Record<Lang, string>>>({});
@@ -567,8 +568,17 @@ export default function SprintPage() {
           >
             <Settings size={18} color="var(--text-muted)" />
           </button>
+          <button
+            onClick={() => setShowHelp(true)}
+            title="About"
+            style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 34, height: 34, borderRadius: 7, border: "none", background: "transparent", color: "var(--text-muted)", cursor: "pointer", transition: "background 0.15s", marginLeft: 2 }}
+            onMouseEnter={e => { e.currentTarget.style.background = "var(--bg-tertiary)"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
+          >
+            <CircleHelp size={18} color="var(--text-muted)" />
+          </button>
           {phase === "sprint" && (
-            <span style={{ fontSize: 13, color: "#388bfd", background: "rgba(56,139,253,0.12)", padding: "3px 11px", borderRadius: 12, fontWeight: 600 }}>
+            <span style={{ fontSize: 13, color: "#bf6211", background: "var(--bg-primary)", padding: "3px 11px", borderRadius: 12, fontWeight: 600 }}>
               {cur + 1} / {sprintSize}
             </span>
           )}
@@ -631,6 +641,7 @@ export default function SprintPage() {
           onClose={() => setShowSettings(false)}
         />
       )}
+      {showHelp && <HelpOverlay onClose={() => setShowHelp(false)} />}
       {/* ── Phase bodies ── */}
       {phase === "results" && (
         <ResultsScreen
@@ -965,7 +976,7 @@ function SplitLayout({
                 style={{ display: "flex", alignItems: "center", gap: 6, padding: "5px 18px", background: "var(--bg-primary)", border: "none", borderRadius: 6, color: isSubmitting ? "var(--text-muted)" : "#bf6211", fontSize: 12, fontWeight: 700, cursor: "pointer", opacity: phase === "intro" && (isSubmitting || introLoading) ? 0.5 : 1, transition: "opacity 0.15s" }}
               >
                 {isSubmitting && <Loader2 size={12} className="animate-spin" />}
-                {phase === "intro" ? (isSubmitting ? "Judging\u2026" : "Submit") : "Submit & Next \u2192"}
+                {phase === "intro" ? (isSubmitting ? "Judging\u2026" : "Submit") : "Submit & Next"}
               </button>
             </div>
           </div>
@@ -977,7 +988,7 @@ function SplitLayout({
               value={code}
               onChange={v => setCode(v ?? "")}
               theme="vs-dark"
-              options={{ fontSize: editorFontSize, fontFamily: editorFont, fontLigatures: true, minimap: { enabled: false }, scrollBeyondLastLine: false, tabSize: 4, wordWrap: "on", padding: { top: 10, bottom: 10 }, smoothScrolling: true, cursorBlinking: "smooth", overviewRulerLanes: 0, scrollbar: { vertical: "auto", horizontal: "auto", useShadows: false, verticalScrollbarSize: 6 } }}
+              options={{ fontSize: editorFontSize, fontFamily: editorFont, fontLigatures: true, minimap: { enabled: false }, scrollBeyondLastLine: false, tabSize: 4, wordWrap: "on", padding: { top: 10, bottom: 10 }, smoothScrolling: true, cursorBlinking: "smooth", overviewRulerLanes: 0, lineNumbersMinChars: 3, lineDecorationsWidth: 4, scrollbar: { vertical: "auto", horizontal: "auto", useShadows: false, verticalScrollbarSize: 6 } }}
             />
           </div>
           {phase === "intro" && introStatus.kind !== "idle" && (
@@ -990,6 +1001,81 @@ function SplitLayout({
           )}
         </main>
         {phase === "sprint" && <SprintSidebar slots={slots} />}
+      </div>
+    </div>
+  );
+}
+
+const HELP_MARKDOWN = `
+## Feedback
+
+Open Suggestions Form :
+[Google Form](https://docs.google.com/forms/d/e/1FAIpQLSfnM1j0SMCB_fbG_qD0P6xoxblWTbiQXa5zwdj98oLvRg62zg/viewform?usp=publish-editor)
+`;
+
+// ── Help overlay ──────────────────────────────────────────────────────────────
+function HelpOverlay({ onClose }: { onClose: () => void }) {
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: "fixed", inset: 0, zIndex: 50,
+        background: "rgba(0,0,0,0.55)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+      }}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          width: "60%",
+          maxHeight: "72vh",
+          overflowY: "auto",
+          background: "#28292c",
+          borderRadius: 14,
+          border: "1px solid var(--border-subtle)",
+          boxShadow: "0 24px 64px rgba(0,0,0,0.6)",
+          padding: "28px 32px 32px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 20,
+        }}
+      >
+        {/* Header */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <CircleHelp size={16} style={{ color: "var(--text-secondary)" }} />
+            <span style={{ fontSize: 15, fontWeight: 700, letterSpacing: "-0.02em" }}>About</span>
+          </div>
+          <button
+            onClick={onClose}
+            style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text-muted)", fontSize: 18, lineHeight: 1, padding: "2px 6px", borderRadius: 4 }}
+            onMouseEnter={e => { e.currentTarget.style.color = "var(--text-primary)"; }}
+            onMouseLeave={e => { e.currentTarget.style.color = "var(--text-muted)"; }}
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Markdown body */}
+        <div className="md-body">
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            components={{
+              a: ({ href, children }) => (
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "#bf6211", textDecoration: "underline" }}
+                >
+                  {children}
+                </a>
+              ),
+            }}
+          >
+            {HELP_MARKDOWN}
+          </ReactMarkdown>
+        </div>
       </div>
     </div>
   );
