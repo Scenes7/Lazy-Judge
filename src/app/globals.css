@@ -2,7 +2,6 @@
 
 @layer base {
   :root {
-    /* ── Monkeytype-inspired palette ── */
     --bg-primary: #323437;
     /* main background */
     --bg-secondary: #2c2e31;
@@ -16,10 +15,8 @@
     --border-muted: #3a3c40;
 
     --text-primary: #d1d0c5;
-    /* monkeytype cream  */
     --text-secondary: #9d9b91;
     --text-muted: #646669;
-    /* monkeytype sub    */
 
     /* accent colours stay vibrant against the warmer bg */
     --accent-blue: #528bff;
@@ -28,7 +25,7 @@
     --accent-green: #3fb950;
     --accent-green-subtle: #238636;
     --accent-red: #f85149;
-    --accent-orange: #e2b714;
+    --accent-orange: #bf6211;
     /* default orange */
     --accent-purple: #bc8cff;
   }
