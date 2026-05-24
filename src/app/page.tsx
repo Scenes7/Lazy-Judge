@@ -655,8 +655,8 @@ export default function SprintPage() {
       )}
       {phase === "transition" && (
         <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "var(--bg-primary)", gap: 18 }}>
-          <Loader2 size={34} className="animate-spin" style={{ color: "var(--accent-blue)" }} />
-          <div style={{ fontSize: 15, color: "var(--text-secondary)" }}>Loading your sprint problems…</div>
+          <Loader2 size={34} className="animate-spin" style={{ color: "var(--accent-orange)" }} />
+          <div style={{ fontSize: 15, color: "var(--text-secondary)" }}>Loading problems…</div>
         </div>
       )}
       {(phase === "intro" || phase === "sprint") && (
@@ -785,9 +785,9 @@ function SettingsOverlay({
                     fontSize: 13,
                     padding: "10px 18px",
                     borderRadius: 8,
-                    border: active ? "2px solid var(--accent-blue)" : "1px solid var(--border-subtle)",
+                    border: active ? "2px solid var(--accent-orange)" : "1px solid var(--border-subtle)",
                     background: active ? "rgba(56,139,253,0.12)" : "var(--bg-tertiary)",
-                    color: active ? "var(--accent-blue)" : "var(--text-primary)",
+                    color: active ? "var(--accent-orange)" : "var(--text-primary)",
                     cursor: "pointer",
                     transition: "border-color 0.15s, background 0.15s, color 0.15s",
                     userSelect: "none",
@@ -813,7 +813,7 @@ function SettingsOverlay({
                   padding: "6px 18px",
                   border: "none",
                   borderRight: i === 0 ? "1px solid var(--border-subtle)" : "none",
-                  background: showTimer === val ? "var(--accent-blue)" : "var(--bg-tertiary)",
+                  background: showTimer === val ? "var(--accent-orange)" : "var(--bg-tertiary)",
                   color: showTimer === val ? "#fff" : "var(--text-secondary)",
                   fontSize: 12, fontWeight: 600, cursor: "pointer",
                   transition: "background 0.15s, color 0.15s",
@@ -993,7 +993,7 @@ function SplitLayout({
           </div>
           {phase === "intro" && introStatus.kind !== "idle" && (
             <div style={{ borderTop: "1px solid var(--border-subtle)", padding: "8px 14px", background: "var(--bg-secondary)", flexShrink: 0, display: "flex", alignItems: "center", gap: 10 }}>
-              <span style={{ fontSize: 12, fontWeight: 600, color: introStatus.kind === "success" ? "var(--accent-green)" : introStatus.kind === "running" || introStatus.kind === "queued" ? "var(--accent-blue)" : "var(--accent-red)" }}>
+              <span style={{ fontSize: 12, fontWeight: 600, color: introStatus.kind === "success" ? "var(--accent-green)" : introStatus.kind === "running" || introStatus.kind === "queued" ? "var(--accent-orange)" : "var(--accent-red)" }}>
                 {introStatus.message}
               </span>
               {introStatus.kind === "success" && <span style={{ fontSize: 12, color: "var(--text-muted)" }}>Loading sprint\u2026</span>}

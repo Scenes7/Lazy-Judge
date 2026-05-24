@@ -3,26 +3,34 @@
 @layer base {
   :root {
     /* ── Monkeytype-inspired palette ── */
-    --bg-primary:   #323437;   /* main background */
-    --bg-secondary: #2c2e31;   /* panels, header   */
-    --bg-tertiary:  #3a3c40;   /* inputs, dropdowns */
-    --bg-card:      #2c2e31;   /* code blocks       */
+    --bg-primary: #323437;
+    /* main background */
+    --bg-secondary: #2c2e31;
+    /* panels, header   */
+    --bg-tertiary: #3a3c40;
+    /* inputs, dropdowns */
+    --bg-card: #2c2e31;
+    /* code blocks       */
 
     --border-subtle: #4a4d52;
-    --border-muted:  #3a3c40;
+    --border-muted: #3a3c40;
 
-    --text-primary:   #d1d0c5;  /* monkeytype cream  */
+    --text-primary: #d1d0c5;
+    /* monkeytype cream  */
     --text-secondary: #9d9b91;
-    --text-muted:     #646669;  /* monkeytype sub    */
+    --text-muted: #646669;
+    /* monkeytype sub    */
 
     /* accent colours stay vibrant against the warmer bg */
-    --accent-blue:         #528bff;
-    --accent-blue-subtle:  #528bff1a;
-    --accent-green:        #3fb950;
+    --accent-blue: #528bff;
+    /* future use */
+    --accent-blue-subtle: #528bff1a;
+    --accent-green: #3fb950;
     --accent-green-subtle: #238636;
-    --accent-red:          #f85149;
-    --accent-orange:       #e2b714;  /* monkeytype yellow */
-    --accent-purple:       #bc8cff;
+    --accent-red: #f85149;
+    --accent-orange: #e2b714;
+    /* default orange */
+    --accent-purple: #bc8cff;
   }
 
   * {
@@ -31,7 +39,8 @@
     padding: 0;
   }
 
-  html, body {
+  html,
+  body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
     font-family: "Roboto Mono", "Fira Code", "Cascadia Code", "Consolas", monospace;
@@ -39,7 +48,8 @@
     overflow: hidden;
   }
 
-  #__next, main {
+  #__next,
+  main {
     height: 100%;
   }
 }
@@ -48,60 +58,120 @@
 .monaco-editor .margin {
   background-color: var(--bg-secondary) !important;
 }
+
 /* Center line numbers in the gutter and add 1px left breathing room */
 .monaco-editor .line-numbers {
   text-align: center !important;
   padding-left: 1px !important;
   padding-right: 0 !important;
 }
+
 /* Note: Set lineNumbersMinChars: 3 in editor options={{ ... }} */
 
 /* Custom scrollbar */
-::-webkit-scrollbar       { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-secondary); }
-::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
 
 /* Animations */
 @keyframes pulse-ring {
-  0%   { transform: scale(0.8); opacity: 0.8; }
-  50%  { transform: scale(1.2); opacity: 0.4; }
-  100% { transform: scale(0.8); opacity: 0.8; }
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 0.4;
+  }
+
+  100% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
 }
 
 @keyframes slide-in-up {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes shimmer {
-  0%   { background-position: -400px 0; }
-  100% { background-position:  400px 0; }
+  0% {
+    background-position: -400px 0;
+  }
+
+  100% {
+    background-position: 400px 0;
+  }
 }
 
-.animate-pulse-ring { animation: pulse-ring 1.5s ease-in-out infinite; }
-.animate-slide-up   { animation: slide-in-up 0.25s ease-out forwards; }
+.animate-pulse-ring {
+  animation: pulse-ring 1.5s ease-in-out infinite;
+}
+
+.animate-slide-up {
+  animation: slide-in-up 0.25s ease-out forwards;
+}
 
 .shimmer {
-  background: linear-gradient(
-    90deg,
-    var(--bg-tertiary) 25%,
-    var(--bg-card)     50%,
-    var(--bg-tertiary) 75%
-  );
+  background: linear-gradient(90deg,
+      var(--bg-tertiary) 25%,
+      var(--bg-card) 50%,
+      var(--bg-tertiary) 75%);
   background-size: 800px 100%;
   animation: shimmer 1.5s infinite linear;
 }
 
 @keyframes slot-glow {
-  0%, 100% { box-shadow: 0 0 6px #528bff60; }
-  50%       { box-shadow: 0 0 14px #528bffaa; }
+
+  0%,
+  100% {
+    box-shadow: 0 0 6px #528bff60;
+  }
+
+  50% {
+    box-shadow: 0 0 14px #528bffaa;
+  }
 }
 
 @keyframes fade-in {
-  from { opacity: 0; transform: scale(0.95); }
-  to   { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-.slot-active-pulse { animation: slot-glow 1.8s ease-in-out infinite; }
-.results-enter     { animation: fade-in 0.4s ease-out forwards; }
+.slot-active-pulse {
+  animation: slot-glow 1.8s ease-in-out infinite;
+}
+
+.results-enter {
+  animation: fade-in 0.4s ease-out forwards;
+}
