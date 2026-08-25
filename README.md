@@ -5,7 +5,7 @@ An online timed judge platform for algorithmic problems.
 
 ## Design
 
-![Lazy Judge Architecture](../architecture.png)
+![Lazy Judge Architecture](https://github.com/Scenes7/Lazy-Judge/blob/main/architecture.png)
 
 ## Tech Stack
 
