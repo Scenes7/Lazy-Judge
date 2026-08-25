@@ -353,7 +353,7 @@ export default function SprintPage() {
   const sprintId = useRef<string>("");
   const [, setTick] = useState(0);
 
-  const { problem: introProblem, loading: introLoading } = useProblem("a_plus_b");
+  const { problem: introProblem, loading: introLoading } = useProblem("A_plus_B");
   const { status: introStatus, submit: introSubmit, reset: introReset } = useJudge();
   const { submit: sprintSubmit, closeAll } = useSprintJudge();
 
