@@ -273,6 +273,34 @@ function ResultRow({ slot, idx, open, onToggle }: {
   );
 }
 
+// ── Google AdSense banner (rendered once on results screen) ──────────────────
+function AdBanner() {
+  const pushed = useRef(false);
+
+  useEffect(() => {
+    if (pushed.current) return;
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+      pushed.current = true;
+    } catch {
+      // AdSense not loaded — ad-blockers, localhost, etc.
+    }
+  }, []);
+
+  return (
+    <div style={{ marginTop: 32, width: "100%", maxWidth: 680, minHeight: 90, display: "flex", justifyContent: "center" }}>
+      <ins
+        className="adsbygoogle"
+        style={{ display: "block", width: "100%" }}
+        data-ad-client="ca-pub-3508670481189931"
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      />
+    </div>
+  );
+}
+
 // ── Full results body (no header — header is always rendered by SprintPage) ──────
 function ResultsScreen({ slots, finalStr, wpm, totalChars, accepted, onPlayAgain }: {
   slots: Slot[];
@@ -325,6 +353,9 @@ function ResultsScreen({ slots, finalStr, wpm, totalChars, accepted, onPlayAgain
       >
         <House size={18} />
       </button>
+
+      {/* Google AdSense */}
+      <AdBanner />
     </div>
   );
 }
